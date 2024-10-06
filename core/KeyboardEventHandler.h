@@ -15,6 +15,14 @@ enum class ActionNameEnum
     // 可以继续添加更多动作名称的枚举值
 };
 
+// 定义 ActionNameData 结构体
+struct ActionNameData
+{
+    ActionNameEnum actionName;
+
+    ActionNameData(ActionNameEnum name) : actionName(name) {}
+};
+
 class KeyboardEventHandler
 {
 public:

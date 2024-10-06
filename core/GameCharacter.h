@@ -32,12 +32,12 @@ struct CharacterInitData
 class GameCharacter
 {
 public:
-    GameCharacter(SequenceFrameAnimation* displayObj, const CharacterInitData& initData);
+    GameCharacter(std::unique_ptr<SequenceFrameAnimation> displayObj, const CharacterInitData& initData);
     ~GameCharacter();
 
     SequenceFrameAnimation* getDisplayObject();
 private:
-    SequenceFrameAnimation* _displayObject;
+    std::unique_ptr<SequenceFrameAnimation> _displayObject;
     int _mapPositionX;
     int _mapPositionY;
     CharacterAction _currentAction;

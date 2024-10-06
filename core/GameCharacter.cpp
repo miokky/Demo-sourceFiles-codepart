@@ -1,7 +1,7 @@
 #include "GameCharacter.h"
 
-GameCharacter::GameCharacter(SequenceFrameAnimation* displayObj, const CharacterInitData& initData)
-    : _displayObject(displayObj),
+GameCharacter::GameCharacter(std::unique_ptr<SequenceFrameAnimation> displayObj, const CharacterInitData& initData)
+    : _displayObject(std::move(displayObj)),
     _mapPositionX(initData.mapPositionX),
     _mapPositionY(initData.mapPositionY),
     _currentAction(initData.currentAction),
@@ -16,13 +16,10 @@ GameCharacter::GameCharacter(SequenceFrameAnimation* displayObj, const Character
 
 GameCharacter::~GameCharacter()
 {
-    if (_displayObject)
-    {
-        delete _displayObject;
-    }
+
 }
 
 SequenceFrameAnimation* GameCharacter::getDisplayObject()
 {
-    return _displayObject;
+    return _displayObject.get();
 }

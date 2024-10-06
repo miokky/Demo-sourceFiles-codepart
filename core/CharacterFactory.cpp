@@ -25,13 +25,13 @@ CharacterFactory* CharacterFactory::getInstance()
 
 void CharacterFactory::loadConfigurations()
 {
-    _configPaths["player"] = "PlayerConfig.txt";
+    _configPaths["player"] = "playerConfig.txt";
     // 可以添加更多角色的配置路径
 
     for (const auto& pair : _configPaths)
     {
         std::string configPath = pair.second;
-        std::string fullPath = cocos2d::FileUtils::getInstance()->fullPathForFilename(configPath);
+        std::string fullPath = cocos2d::FileUtils::getInstance()->fullPathForFilename("configs/"+configPath);
         std::string content = cocos2d::FileUtils::getInstance()->getStringFromFile(fullPath);
 
         std::unordered_map<std::string, std::string> configMap;
@@ -64,12 +64,12 @@ GameCharacter* CharacterFactory::createCharacter(const std::string& characterNam
     std::unordered_map<std::string, std::string> configMap = _cachedConfigs[characterName];
 
     // 读取配置文件中的参数
-    float anchorX = std::stoi(configMap["anchor_x"]);
-    float anchorY = std::stoi(configMap["anchor_y"]);
+    float anchorX = std::stof(configMap["anchor_x"]);
+    float anchorY = std::stof(configMap["anchor_y"]);
     int mapPositionX = std::stoi(configMap["initial_x"]);
     int mapPositionY = std::stoi(configMap["initial_y"]);
     std::string currentActionStr = configMap["initial_action"];
-    CharacterAction currentAction = currentActionStr == "Stand" ? CharacterAction::Stand : CharacterAction::Moving;
+    CharacterAction currentAction = currentActionStr == "stand" ? CharacterAction::Stand : CharacterAction::Moving;
     int health = std::stoi(configMap["health"]);
     int maxHealth = std::stoi(configMap["max_health"]);
     int mana = std::stoi(configMap["mana"]);
@@ -78,30 +78,40 @@ GameCharacter* CharacterFactory::createCharacter(const std::string& characterNam
     int attackPower = std::stoi(configMap["attack_power"]);
     
     // 创建 SequenceFrameAnimation 对象
-    std::string atlasName = configMap["initial_action"];
+    std::string atlasName = configMap["plist_name"];
     std::vector<FrameAnimationInfo> animations = FrameAnimationConfig::getInstance().getFrameAnimationInfos(atlasName);
-    auto sequenceAnimation = SequenceFrameAnimation::create(atlasName, animations);
-
-    // 创建并初始化 GameCharacter 对象
-    CharacterInitData initData{ mapPositionX, mapPositionY, currentAction, health, maxHealth, mana, maxMana, manaRecoveryRate, attackPower };
-    auto character = new GameCharacter(sequenceAnimation.get(), initData);
 
     // 创建 sprite 对象并设置锚点
     auto sprite = cocos2d::Sprite::create();
     sprite->setAnchorPoint(cocos2d::Vec2(anchorX, anchorY));
-    sprite->setPosition(mapPositionX, mapPositionY);
-
-    // 根据 initial_action 参数，调用 SequenceFrameAnimation 的 play 方法
-    sequenceAnimation->play(sprite, currentActionStr, false);
-
     // 将 sprite 添加到父节点
     if (parent)
     {
         parent->addChild(sprite);
     }
+    sprite->setPosition(mapPositionX, mapPositionY);
+
+    auto sequenceAnimation = SequenceFrameAnimation::create(atlasName, animations, sprite);
+    
+    // 创建并初始化 GameCharacter 对象
+    CharacterInitData initData{ mapPositionX, mapPositionY, currentAction, health, maxHealth, mana, maxMana, manaRecoveryRate, attackPower };
+    auto character = new GameCharacter(std::move(sequenceAnimation), initData);
+
+    
+    // 根据 initial_action 参数，调用 SequenceFrameAnimation 的 play 方法    
+    character->getDisplayObject()->play(currentActionStr, true);
 
     // 缓存角色对象
     _characterCache[characterName] = character;
 
     return character;
+}
+
+GameCharacter* CharacterFactory::getCharacter(const std::string& characterName)
+{
+    if (_characterCache.find(characterName) != _characterCache.end())
+    {
+        return _characterCache[characterName];
+    }
+    return nullptr;
 }

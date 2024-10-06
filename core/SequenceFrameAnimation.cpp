@@ -1,11 +1,11 @@
 #include "SequenceFrameAnimation.h"
 
-SequenceFrameAnimation::SequenceFrameAnimation() {}
+SequenceFrameAnimation::SequenceFrameAnimation(cocos2d::Sprite* target) : _target(target) {}
 SequenceFrameAnimation::~SequenceFrameAnimation() {}
 
-std::unique_ptr<SequenceFrameAnimation> SequenceFrameAnimation::create(const std::string& atlasName, const std::vector<FrameAnimationInfo>& animations)
+std::unique_ptr<SequenceFrameAnimation> SequenceFrameAnimation::create(const std::string& atlasName, const std::vector<FrameAnimationInfo>& animations, cocos2d::Sprite* target)
 {
-    std::unique_ptr<SequenceFrameAnimation> animation = std::make_unique<SequenceFrameAnimation>();
+    std::unique_ptr<SequenceFrameAnimation> animation = std::make_unique<SequenceFrameAnimation>(target);
     if (animation && animation->initWithAtlasAndAnimations(atlasName, animations))
     {
         return animation;
@@ -46,9 +46,9 @@ bool SequenceFrameAnimation::initWithAtlasAndAnimations(const std::string& atlas
     return true;
 }
 
-void SequenceFrameAnimation::play(cocos2d::Node* target, const std::string& actionName, bool isLoop)
+void SequenceFrameAnimation::play(const std::string& actionName, bool isLoop)
 {
-    if (!target) return;
+    if (!_target) return;
 
     auto framesIt = _framesMap.find(actionName);
     auto delayIt = _frameDelayMap.find(actionName);
@@ -63,10 +63,10 @@ void SequenceFrameAnimation::play(cocos2d::Node* target, const std::string& acti
     if (isLoop)
     {
         auto repeatForever = cocos2d::RepeatForever::create(animate);
-        target->runAction(repeatForever);
+        _target->runAction(repeatForever);
     }
     else
     {
-        target->runAction(animate);
+        _target->runAction(animate);
     }
 }

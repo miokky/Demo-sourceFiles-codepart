@@ -14,13 +14,14 @@ private:
     std::unordered_map<std::string, float> _frameDelayMap;
     std::unique_ptr<cocos2d::Animation> _animation;
     std::unique_ptr<cocos2d::Animate> _animate;
+    cocos2d::Sprite* _target;
 
 public:
-    SequenceFrameAnimation();
+    SequenceFrameAnimation(cocos2d::Sprite* target = nullptr);
     ~SequenceFrameAnimation();
-    static std::unique_ptr<SequenceFrameAnimation> create(const std::string& atlasName, const std::vector<FrameAnimationInfo>& animations);
+    static std::unique_ptr<SequenceFrameAnimation> create(const std::string& atlasName, const std::vector<FrameAnimationInfo>& animations, cocos2d::Sprite* target);
     bool initWithAtlasAndAnimations(const std::string& atlasName, const std::vector<FrameAnimationInfo>& animations);
-    void play(cocos2d::Node* target, const std::string& actionName, bool isLoop = false);
+    void play(const std::string& actionName, bool isLoop = false);
 };
 
 #endif // SEQUENCE_FRAME_ANIMATION_H

@@ -13,14 +13,16 @@ class CharacterFactory
 public:
     static CharacterFactory* getInstance();
 
+    // 加载配置文件并初始化内部数据结构
+    void loadConfigurations();
+
     GameCharacter* createCharacter(const std::string& characterName, cocos2d::Node* parent);
+
+    GameCharacter* getCharacter(const std::string& characterName);
 
 private:
     CharacterFactory();
     ~CharacterFactory();
-
-    // 加载配置文件并初始化内部数据结构
-    void loadConfigurations();
 
     std::unordered_map<std::string, std::string> _configPaths;
     std::unordered_map<std::string, std::unordered_map<std::string, std::string>> _cachedConfigs;

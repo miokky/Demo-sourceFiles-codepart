@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "../core/SequenceFrameAnimation.h"
 #include "../core/KeyboardEventHandler.h"
+#include "../core/CharacterFactory.h"
 
 class BattleScene : public cocos2d::Layer
 {
@@ -13,7 +14,6 @@ public:
     CREATE_FUNC(BattleScene);
 
 private:
-    std::unique_ptr<SequenceFrameAnimation> _sequenceAnimation;
     KeyboardEventHandler _keyboardHandler;
 
     virtual void onExit();

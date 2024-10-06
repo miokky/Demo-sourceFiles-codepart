@@ -3,14 +3,6 @@
 
 using namespace cocos2d;
 
-// 定义 ActionNameData 结构体
-struct ActionNameData
-{
-    ActionNameEnum actionName;
-
-    ActionNameData(ActionNameEnum name) : actionName(name) {}
-};
-
 KeyboardEventHandler::KeyboardEventHandler()
 {
     _keyboardListener = nullptr;
