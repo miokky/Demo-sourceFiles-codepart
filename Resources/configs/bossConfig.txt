@@ -1,0 +1,14 @@
+anchor_x 0.5
+anchor_y 0.07
+initial_x 600
+initial_y 200
+initial_action stand
+health 100
+max_health 100
+mana 100
+max_mana 100
+mana_recovery_rate 10
+attack_power 100
+move_speed 150
+initial_scaleX -1
+plist_name reimu_animation_frames

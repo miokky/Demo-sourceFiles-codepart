@@ -1,0 +1,6 @@
+W move_up
+S move_down
+A move_left
+D move_right
+J attack
+K cast_skill_1
